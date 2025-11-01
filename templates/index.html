@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MGNREGA District Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h2>MGNREGA District Performance</h2>
+  <p>Select your district to view progress:</p>
+  
+  <select id="district">
+    <option value="">-- Select District --</option>
+    <option>Pune</option>
+    <option>Nashik</option>
+    <option>Ahmednagar</option>
+    <option>Solapur</option>
+  </select>
+  <button onclick="fetchData()">Check Performance</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function fetchData() {
+      const district = document.getElementById("district").value;
+      if (!district) {
+        alert("Please select a district!");
+        return;
+      }
+
+      document.getElementById("result").innerHTML = "Loading data...";
+      const res = await fetch(`/data/${district}`);
+      const data = await res.json();
+
+      if (data.error) {
+        document.getElementById("result").innerHTML = "Error: " + data.error;
+      } else {
+        document.getElementById("result").innerHTML =
+          `<h3>${district} District Data</h3>
+           <pre>${JSON.stringify(data, null, 2)}</pre>`;
+      }
+    }
+  </script>
+</body>
+</html>
